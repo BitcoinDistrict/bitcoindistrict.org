@@ -49,7 +49,7 @@ export function HeroSection({
             className="w-full h-full object-cover"
           />
           {backgroundOverlay && (
-            <div className="absolute inset-0 bg-background/70" />
+            <div className="absolute inset-0 bg-background/75" />
           )}
         </div>
       )}
@@ -62,7 +62,7 @@ export function HeroSection({
       )}>
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight">{title}</h1>
         {description && (
-          <p className="text-lg md:text-xl text-muted-foreground max-w-prose">
+          <p className="text-lg md:text-xl text-foreground max-w-prose">
             {description}
           </p>
         )}
