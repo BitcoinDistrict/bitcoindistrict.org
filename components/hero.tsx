@@ -1,44 +1,83 @@
-import NextLogo from "./next-logo";
-import SupabaseLogo from "./supabase-logo";
+// components/ui/hero-section.tsx
+import React from 'react';
+import { cn } from '@/lib/utils';
 
-export default function Header() {
+interface HeroSectionProps {
+  title: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  children?: React.ReactNode;
+  className?: string;
+  variant?: 'default' | 'centered' | 'split' | 'full-bleed';
+  backgroundOverlay?: boolean;
+}
+
+// Export the component both as default and named export
+export function HeroSection({
+  title,
+  description,
+  image,
+  imageAlt,
+  children,
+  className,
+  variant = 'default',
+  backgroundOverlay = false,
+}: HeroSectionProps) {
+  const variants = {
+    default: 'grid grid-cols-1 gap-6 items-center py-16 md:py-24 px-4 md:px-8',
+    centered: 'flex flex-col items-center text-center py-16 md:py-24 px-4 md:px-8',
+    split: 'grid grid-cols-1 md:grid-cols-2 gap-6 items-center py-16 md:py-24 px-4 md:px-8',
+    'full-bleed': 'w-full flex flex-col items-center py-16 md:py-24',
+  };
+
   return (
-    <div className="flex flex-col gap-16 items-center">
-      <div className="flex gap-8 justify-center items-center">
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <SupabaseLogo />
-        </a>
-        <span className="border-l rotate-45 h-6" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-          <NextLogo />
-        </a>
+    <section 
+      className={cn(
+        'relative w-full',
+        image && 'overflow-hidden min-h-[50vh]',
+        variants[variant],
+        className
+      )}
+    >
+      {/* Background image */}
+      {image && (
+        <div className="absolute inset-0 -z-10">
+          <img 
+            src={image} 
+            alt={imageAlt || 'Background'} 
+            className="w-full h-full object-cover"
+          />
+          {backgroundOverlay && (
+            <div className="absolute inset-0 bg-background/70" />
+          )}
+        </div>
+      )}
+      
+      {/* Content */}
+      <div className={cn(
+        'flex flex-col gap-6 z-10',
+        variant === 'split' ? 'md:col-span-1' : '',
+        variant === 'full-bleed' ? 'container mx-auto px-4 md:px-8' : ''
+      )}>
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight">{title}</h1>
+        {description && (
+          <p className="text-lg md:text-xl text-muted-foreground max-w-prose">
+            {description}
+          </p>
+        )}
+        {children}
       </div>
-      <h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-      <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
-        The fastest way to build apps with{" "}
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Supabase
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://nextjs.org/"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Next.js
-        </a>
-      </p>
-      <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
-    </div>
+      
+      {/* Split variant right side placeholder */}
+      {variant === 'split' && !children && (
+        <div className="md:col-span-1">
+          {/* This space can be used for media or other content */}
+        </div>
+      )}
+    </section>
   );
 }
+
+// Export as default as well
+export default HeroSection;
