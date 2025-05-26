@@ -35,7 +35,7 @@ export function HeroSection({
     <section 
       className={cn(
         'relative w-full',
-        image && 'overflow-hidden min-h-[50vh]',
+        image && 'overflow-hidden min-h-[40vh]',
         variants[variant],
         className
       )}

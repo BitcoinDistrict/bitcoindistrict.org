@@ -62,11 +62,12 @@ export default function RootLayout({
                   </div>
                   <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-[50px] z-10">
                     <Image 
-                      src="/images/logos/bd.png" 
+                      src="/images/logos/bd.png"
+                      //href={siteConfig.url}
                       alt={`${siteConfig.title} Logo`} 
                       width={100} 
                       height={100}
-                      className="rounded-full border-4 border-background"
+                      className="rounded-full border-3 border-background"
                     />
                   </div>
                   {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
