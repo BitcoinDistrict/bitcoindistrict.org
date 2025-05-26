@@ -11,9 +11,11 @@ export default function AboutPage() {
       variant="centered"
     >
     </HeroSection>
-    <main className="flex-1 flex flex-col gap-6 px-4 max-w-5xl mx-auto w-full">
-      <h2 className="font-medium text-xl mb-4">A little bit about us...</h2>
-    </main>
+    <section className="container mx-auto py-8 px-4 md:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <h2> This is H2 text. </h2>
+      </div>
+    </section>
 
     </>
     );
