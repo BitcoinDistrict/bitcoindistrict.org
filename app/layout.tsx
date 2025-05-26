@@ -9,32 +9,18 @@ import Image from "next/image";
 import "./globals.css";
 import Footer from '@/components/Footer';
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import { siteConfig } from "@/data/config";
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  themeColor: "#000000",
-};
+export const viewport: Viewport = siteConfig.viewport;
 
 export const metadata = {
-  metadataBase: new URL(defaultUrl),
-  title: "Bitcoin District",
-  description: "Bitcoin District is a network of Bitcoiners living and working in the DC, Maryland & Virginia (DMV) area seeking to network, socialize & collaborate with other Bitcoiners.",
-  manifest: "/api/manifest/default",
-  applicationName: "Bitcoin District",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Bitcoin District",
-  },
-  formatDetection: {
-    telephone: false,
-  },
+  metadataBase: new URL(siteConfig.url),
+  title: siteConfig.title,
+  description: siteConfig.description,
+  manifest: siteConfig.manifest,
+  applicationName: siteConfig.applicationName,
+  appleWebApp: siteConfig.appleWebApp,
+  formatDetection: siteConfig.formatDetection,
 };
 
 const geistSans = Geist({
@@ -50,15 +36,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <head>
-        <link rel="apple-touch-icon" href="/icons/default/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/default/icon-180x180.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/default/icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="167x167" href="/icons/default/icon-167x167.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/default/icon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/default/icon-16x16.png" />
+        <link rel="apple-touch-icon" href={siteConfig.icons.appleTouchIcon} />
+        <link rel="apple-touch-icon" sizes="180x180" href={siteConfig.icons.appleTouchIcon180} />
+        <link rel="apple-touch-icon" sizes="152x152" href={siteConfig.icons.appleTouchIcon152} />
+        <link rel="apple-touch-icon" sizes="167x167" href={siteConfig.icons.appleTouchIcon167} />
+        <link rel="icon" type="image/png" sizes="32x32" href={siteConfig.icons.favicon32} />
+        <link rel="icon" type="image/png" sizes="16x16" href={siteConfig.icons.favicon16} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Bitcoin District" />
+        <meta name="apple-mobile-web-app-status-bar-style" content={siteConfig.appleWebApp.statusBarStyle} />
+        <meta name="apple-mobile-web-app-title" content={siteConfig.appleWebApp.title} />
       </head>
       <body className="bg-background text-foreground">
         <ThemeProvider
@@ -72,12 +58,12 @@ export default function RootLayout({
               <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 relative">
                 <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
                   <div className="flex gap-5 items-center font-semibold">
-                    <Link href={"/"}>Bitcoin District</Link>
+                    <Link href={"/"}>{siteConfig.title}</Link>
                   </div>
                   <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-[50px] z-10">
                     <Image 
                       src="/images/logos/bd.png" 
-                      alt="Bitcoin District Logo" 
+                      alt={`${siteConfig.title} Logo`} 
                       width={100} 
                       height={100}
                       className="rounded-full border-4 border-background"
