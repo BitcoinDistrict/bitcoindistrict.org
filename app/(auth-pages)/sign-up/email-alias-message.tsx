@@ -1,18 +1,17 @@
-import { ArrowUpRight, InfoIcon } from "lucide-react";
+import { ArrowUpRight, InfoIcon, ShieldIcon } from "lucide-react";
 import Link from "next/link";
 
-export function SmtpMessage() {
+export function EmailAliasMessage() {
   return (
     <div className="bg-muted/50 px-5 py-3 border rounded-md flex gap-4">
-      <InfoIcon size={16} className="mt-0.5" />
+      <ShieldIcon size={16} className="mt-0.5" />
       <div className="flex flex-col gap-1">
         <small className="text-sm text-secondary-foreground">
-          <strong> Note:</strong> Emails are rate limited. Enable Custom SMTP to
-          increase the rate limit.
+          <strong>Protect your privacy</strong> by using an email alias. See more Awesome Privacy tips.
         </small>
         <div>
           <Link
-            href="https://supabase.com/docs/guides/auth/auth-smtp"
+            href="https://awesome-privacy.xyz/communication/mail-forwarding"
             target="_blank"
             className="text-primary/50 hover:text-primary flex items-center text-sm gap-1"
           >
