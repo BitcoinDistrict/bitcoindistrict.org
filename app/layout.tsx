@@ -42,6 +42,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="167x167" href={siteConfig.icons.appleTouchIcon167} />
         <link rel="icon" type="image/png" sizes="32x32" href={siteConfig.icons.favicon32} />
         <link rel="icon" type="image/png" sizes="16x16" href={siteConfig.icons.favicon16} />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content={siteConfig.appleWebApp.statusBarStyle} />
         <meta name="apple-mobile-web-app-title" content={siteConfig.appleWebApp.title} />
@@ -60,16 +61,7 @@ export default function RootLayout({
                   <div className="flex gap-5 items-center font-semibold">
                     <Link href={"/"}>{siteConfig.title}</Link>
                   </div>
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-[50px] z-10">
-                    <Image 
-                      src="/images/logos/bd.png"
-                      //a href={siteConfig.url}
-                      alt={`${siteConfig.title} Site Logo`} 
-                      width={100} 
-                      height={100}
-                      className="rounded-full border-3 border-background"
-                    />
-                  </div>
+
                   {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
                 </div>
               </nav>
