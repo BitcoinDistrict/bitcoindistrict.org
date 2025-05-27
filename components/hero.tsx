@@ -1,6 +1,7 @@
 // components/ui/hero-section.tsx
 import React from 'react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 interface HeroSectionProps {
   title: string;
@@ -42,11 +43,14 @@ export function HeroSection({
     >
       {/* Background image */}
       {image && (
-        <div className="absolute inset-0 -z-10">
-          <img 
+        <div className="absolute inset-0">
+          <Image 
             src={image} 
             alt={imageAlt || 'Background'} 
-            className="w-full h-full object-cover"
+            fill
+            priority
+            className="object-cover"
+            quality={100}
           />
           {backgroundOverlay && (
             <div className="absolute inset-0 bg-background/75" />
@@ -56,7 +60,7 @@ export function HeroSection({
       
       {/* Content */}
       <div className={cn(
-        'flex flex-col gap-6 z-10',
+        'flex flex-col gap-6 relative z-10',
         variant === 'split' ? 'md:col-span-1' : '',
         variant === 'full-bleed' ? 'container mx-auto px-4 md:px-8' : ''
       )}>
