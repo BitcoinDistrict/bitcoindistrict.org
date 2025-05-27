@@ -1,15 +1,14 @@
 import { EnvVarWarning } from "@/components/env-var-warning";
-import HeaderAuth from "@/components/header-auth";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import Link from "next/link";
 import { Viewport } from "next";
 import Image from "next/image";
 import "./globals.css";
 import Footer from '@/components/Footer';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { siteConfig } from "@/data/config";
+import NavbarWithAuth from "@/components/NavbarWithAuth";
 
 export const viewport: Viewport = siteConfig.viewport;
 
@@ -54,20 +53,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="min-h-screen flex flex-col items-center">
-            <div className="flex-1 w-full flex flex-col gap-1 items-center">
-              <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 relative">
-                <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-                  <div className="flex gap-5 items-center font-semibold">
-                    <Link href={"/"}>{siteConfig.title}</Link>
-                  </div>
-                  {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
-                </div>
-              </nav>
-              {children}
-              <Footer />
-            </div>
-          </main>
+          <NavbarWithAuth />
+          {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
