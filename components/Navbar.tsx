@@ -19,7 +19,6 @@ import { Button } from "./ui/button";
 export function NavbarAuthClient({ user }: { user: any | null }) {
   return user ? (
     <div className="flex items-center gap-4">
-      <span className="text-sm">Hey, {user.email}!</span>
       <form action={signOutAction}>
         <Button type="submit" variant="outline" size="sm">
           Sign out
@@ -40,9 +39,9 @@ export default function NavbarComponent({ user }: { user: any | null }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const menuItems = [
-    { name: "Features", href: "#" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" }
+    { name: "Events", href: "/events" },
+    { name: "Meetups", href: "/meetups" },
+    { name: "About", href: "/about" }
   ];
   
   return (
@@ -68,13 +67,15 @@ export default function NavbarComponent({ user }: { user: any | null }) {
       </NavbarContent>
 
       {/* Desktop navbar */}
-      <NavbarContent className="hidden sm:flex gap-4" justify="start">
+      <NavbarContent className="hidden sm:flex" justify="start">
         <NavbarBrand>
           <Link href="/" className="font-semibold">
             {siteConfig.title}
           </Link>
         </NavbarBrand>
-        
+      </NavbarContent>
+
+      <NavbarContent className="hidden sm:flex" justify="center">
         {menuItems.map((item) => (
           <NavbarItem key={item.name}>
             <Link href={item.href} className="text-foreground">
