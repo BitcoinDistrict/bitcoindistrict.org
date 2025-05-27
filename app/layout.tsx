@@ -61,7 +61,6 @@ export default function RootLayout({
                   <div className="flex gap-5 items-center font-semibold">
                     <Link href={"/"}>{siteConfig.title}</Link>
                   </div>
-
                   {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
                 </div>
               </nav>
