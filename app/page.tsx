@@ -3,7 +3,7 @@ import ConnectSupabaseSteps from "@/components/tutorial/connect-supabase-steps";
 import SignUpUserSteps from "@/components/tutorial/sign-up-user-steps";
 import { Button } from "@/components/ui/button";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
-import { PageContent } from "@/components/page-content";
+import { PageContent } from "@/components/PageContent";
 import FeatureSection from "@/components/FeatureSection";
 
 export default async function Home() {

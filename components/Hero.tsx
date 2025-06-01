@@ -24,10 +24,10 @@ export function HeroSection({
   backgroundOverlay = false,
 }: HeroSectionProps) {
   const variants = {
-    default: 'grid grid-cols-1 gap-6 items-center py-8 md:py-12 px-4 min-h-[30vh] md:min-h-[40vh] lg:min-h-[50vh]',
-    centered: 'flex flex-col items-center text-center py-8 md:py-12 px-4 min-h-[30vh] md:min-h-[40vh] lg:min-h-[50vh]',
-    split: 'grid grid-cols-1 gap-6 items-center py-8 md:py-12 px-4 min-h-[30vh] md:min-h-[40vh] lg:min-h-[50vh]',
-    'full-bleed': 'w-full flex flex-col items-center py-8 md:py-12 min-h-[40vh] md:min-h-[50vh] lg:min-h-[60vh]',
+    default: 'grid grid-cols-1 gap-6 items-center py-8 md:py-12 px-4 min-h-[30vh] md:min-h-[40vh] lg:min-h-[30vh]',
+    centered: 'flex flex-col items-center text-center py-8 md:py-12 px-4 min-h-[30vh] md:min-h-[40vh] lg:min-h-[30vh]',
+    split: 'grid grid-cols-1 gap-6 items-center py-8 md:py-12 px-4 min-h-[30vh] md:min-h-[40vh] lg:min-h-[30vh]',
+    'full-bleed': 'w-full flex flex-col items-center py-8 md:py-12 min-h-[40vh] md:min-h-[50vh] lg:min-h-[30vh]',
   };
 
   return (

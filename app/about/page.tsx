@@ -1,4 +1,4 @@
-import { PageContent } from '@/components/page-content';
+import { PageContent } from '@/components/PageContent';
 import ImageComponent from '@/components/ImageComponent';
 
 export default function AboutPage() {

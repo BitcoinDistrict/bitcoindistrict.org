@@ -1,20 +1,23 @@
 import { HeroSection } from '@/components/Hero';
-import { PageContent } from '@/components/page-content';
+import { PageContent } from '@/components/PageContent';
+import MainSection from '@/components/MainSection';
 
 export default function BookClubPage() {
-    return (
+  const sections = [
+    {
+      title: "Bitcoin Book Club",
+      subtitle: "We Meet Every Month!",
+      description: "If you’re interested in reading with us, register for one of our monthly book club events below.",
+      className: "bg-transparent",
+      useCard: false,
+    }
+  ];
+
+  return (
       <>
-        <HeroSection
-          title="Bitcoin Book Club"
-          description="If you're interested in reading with us, register for one of our monthly book club events below.​"
-          image="/images/hero/hero5.jpg"
-          backgroundOverlay={true}
-          variant="centered"
-        >
-        </HeroSection>
         <PageContent>
-          <div className="gap-6">
-            <h2> This is book club. </h2>
+          <div>
+            <MainSection layout="single" sections={sections} />
           </div>
         </PageContent>
       </>
