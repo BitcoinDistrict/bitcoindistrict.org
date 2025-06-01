@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Cursor Rules for File Naming Conventions
+
+These rules enforce consistent file naming conventions in a TypeScript-based Next.js project to ensure clarity, scalability, and alignment with community standards.
+
+## Rule 1: Naming Components in /components
+- **Directory**: `/components`
+- **File Types**: `.tsx`
+- **Naming Convention**: Use **PascalCase** for all `.tsx` files.
+- **Reason**: PascalCase aligns with React component naming conventions, matches the component's function name, and is the industry standard for React and Next.js projects.
+- **Examples**:
+  - Correct: `FeatureSection.tsx`, `NavBar.tsx`, `UserProfileCard.tsx`, `Footer.tsx`
+  - Incorrect: `featureSection.tsx`, `feature-section.tsx`, `navbar.tsx`
+- **Instruction**: When creating or renaming files in `/components`, use PascalCase (e.g., `NewComponent.tsx`). Ensure the file name matches the exported component name for consistency.
+
+## Rule 2: Naming TypeScript Data Files in /data
+- **Directory**: `/data`
+- **File Types**: `.ts`
+- **Naming Convention**: Use **camelCase** for all `.ts` files. Use plural names for collections (e.g., arrays) and singular names for single configurations.
+- **Reason**: camelCase aligns with JavaScript/TypeScript variable naming conventions, making imports intuitive and consistent with the codebase. Pluralization reflects the data's structure.
+- **Examples**:
+  - Correct: `features.ts`, `userData.ts`, `siteConfig.ts`
+  - Incorrect: `Features.ts`, `featuresData.ts`, `features-data.ts`
+- **Instruction**: When creating or renaming `.ts` files in `/data`, use camelCase (e.g., `newData.ts`). Use plural names for collections (e.g., `items.ts`) and singular for single configs (e.g., `config.ts`).
+
+## Rule 3: Naming JSON and YAML Data Files in /data
+- **Directory**: `/data`
+- **File Types**: `.json`, `.yaml`, `.yml`
+- **Naming Convention**: Use **kebab-case** for all `.json` and `.yaml`/`.yml` files. Use plural names for collections and singular for single configurations.
+- **Reason**: kebab-case is highly readable in file explorers and aligns with content-driven projects (e.g., CMS integrations) where non-developers may edit files.
+- **Examples**:
+  - Correct: `features-data.json`, `site-config.yaml`, `user-data.yml`
+  - Incorrect: `featuresData.json`, `FeaturesData.yaml`, `siteConfig.yml`
+- **Instruction**: When creating or renaming `.json` or `.yaml`/`.yml` files in `/data`, use kebab-case (e.g., `new-data.json`). Use plural names for collections (e.g., `items-data.json`) and singular for single configs (e.g., `app-config.yaml`).
+
+## Rule 4: Naming Utility Files in /lib and /utils
+- **Directories**: `/lib`, `/utils`
+- **File Types**: `.ts`
+- **Naming Convention**: Use **camelCase** for all `.ts` files.
+- **Reason**: camelCase matches JavaScript/TypeScript variable naming conventions, ensuring consistency with utility functions and modules.
+- **Examples**:
+  - Correct: `apiClient.ts`, `formatDate.ts`, `authUtils.ts`
+  - Incorrect: `ApiClient.ts`, `api-client.ts`, `format_date.ts`
+- **Instruction**: When creating or renaming `.ts` files in `/lib` or `/utils`, use camelCase (e.g., `newUtil.ts`). Ensure names clearly describe the utility’s purpose.
+
+## Rule 5: General Guidelines
+- **Consistency**: Apply these naming conventions consistently across the project to avoid confusion and improve maintainability.
+- **Case Sensitivity**: Ensure all file names are consistently cased to avoid issues on case-sensitive file systems (e.g., Linux servers).
+- **Documentation**: These conventions are documented in the project’s README. Refer to it for additional context.
+- **Instruction**: When suggesting or generating file names, adhere strictly to the above conventions based on the directory and file type. If a file’s purpose is unclear, ask for clarification to ensure the correct naming convention is applied.
+

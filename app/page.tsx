@@ -4,6 +4,7 @@ import SignUpUserSteps from "@/components/tutorial/sign-up-user-steps";
 import { Button } from "@/components/ui/button";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { PageContent } from "@/components/page-content";
+import FeatureSection from "@/components/FeatureSection";
 
 export default async function Home() {
   return (
@@ -21,8 +22,9 @@ export default async function Home() {
         </div>
       </HeroSection>
       <PageContent>
-        <h2 className="font-medium text-xl mb-4">Next steps</h2>
-        {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
+        <div>
+          <FeatureSection title="Get Involved" limit={3} />
+        </div>
       </PageContent>
     </>
   );
