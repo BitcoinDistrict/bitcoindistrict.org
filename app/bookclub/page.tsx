@@ -1,4 +1,4 @@
-import { HeroSection } from '@/components/hero';
+import { HeroSection } from '@/components/Hero';
 import { PageContent } from '@/components/page-content';
 
 export default function BookClubPage() {

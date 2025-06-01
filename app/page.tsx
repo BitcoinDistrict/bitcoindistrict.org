@@ -1,4 +1,4 @@
-import HeroSection from "@/components/hero";
+import HeroSection from "@/components/Hero";
 import ConnectSupabaseSteps from "@/components/tutorial/connect-supabase-steps";
 import SignUpUserSteps from "@/components/tutorial/sign-up-user-steps";
 import { Button } from "@/components/ui/button";
@@ -11,15 +11,11 @@ export default async function Home() {
     <>
       <HeroSection
         title="Welcome to Bitcoin District"
-        description="We provide top-notch solutions for your business"
+        description="Bitcoin District is a network of Bitcoiners living and working in the DC, Maryland & Virginia (DMV) area seeking to network, socialize & collaborate with other Bitcoiners."
         image="/images/hero/hero3.jpg"
         backgroundOverlay={true}
-        variant="full-bleed"
+        variant="centered"
       >
-        <div className="flex gap-4 mt-4">
-          <Button>Get Started</Button>
-          <Button variant="outline">Learn More</Button>
-        </div>
       </HeroSection>
       <PageContent>
         <div>

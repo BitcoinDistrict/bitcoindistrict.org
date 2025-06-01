@@ -1,4 +1,4 @@
-import { HeroSection } from '@/components/hero';
+import { HeroSection } from '@/components/Hero';
 import { MeetupCard, Meetup } from '@/components/MeetupCard';
 import { meetups } from '@/data/meetups';
 import { PageContent } from '@/components/page-content';
