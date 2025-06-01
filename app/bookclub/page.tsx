@@ -1,21 +1,22 @@
 import { HeroSection } from '@/components/hero';
+import { PageContent } from '@/components/page-content';
 
 export default function BookClubPage() {
     return (
       <>
         <HeroSection
           title="Bitcoin Book Club"
-          description="If you’re interested in reading with us, register for one of our monthly book club events below.​"
+          description="If you're interested in reading with us, register for one of our monthly book club events below.​"
           image="/images/hero/hero5.jpg"
           backgroundOverlay={true}
           variant="centered"
         >
         </HeroSection>
-        <section className="container mx-auto py-8 px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
+        <PageContent>
+          <div className="gap-6">
+            <h2> This is book club. </h2>
           </div>
-        </section>
+        </PageContent>
       </>
     );
   }

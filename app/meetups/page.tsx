@@ -1,6 +1,7 @@
 import { HeroSection } from '@/components/hero';
 import { MeetupCard, Meetup } from '@/components/MeetupCard';
 import { meetups } from '@/data/meetups';
+import { PageContent } from '@/components/page-content';
 
 export default function MeetupPage() {
     return (
@@ -13,13 +14,13 @@ export default function MeetupPage() {
           variant="centered"
         >
         </HeroSection>
-        <section className="container mx-auto py-8 px-4 md:px-8">
+        <PageContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {meetups.map((meetup: Meetup) => (
               <MeetupCard key={meetup.id} meetup={meetup} />
             ))}
           </div>
-        </section>
+        </PageContent>
       </>
     );
   }

@@ -41,6 +41,7 @@ export default function NavbarComponent({ user }: { user: any | null }) {
   const menuItems = [
     { name: "Events", href: "/events" },
     { name: "Meetups", href: "/meetups" },
+    { name: "Merchants", href: "/merchants" },
     { name: "About", href: "/about" }
   ];
   
@@ -49,7 +50,7 @@ export default function NavbarComponent({ user }: { user: any | null }) {
       isBordered 
       isMenuOpen={isMenuOpen} 
       onMenuOpenChange={setIsMenuOpen}
-      className="border-b border-b-foreground/10"
+      className="border-b border-b-foreground/10 relative z-50"
       maxWidth="xl"
     >
       {/* Mobile menu toggle (only shows on small screens) */}

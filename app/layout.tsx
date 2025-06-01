@@ -54,7 +54,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NavbarWithAuth />
-          {children}
+          <div className="flex-1">
+            {children}
+          </div>
           <Footer />
         </ThemeProvider>
       </body>
