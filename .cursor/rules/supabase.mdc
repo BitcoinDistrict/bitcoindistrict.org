@@ -1,0 +1,149 @@
+---
+description: Rules to follow when creating supabase/database tables, functions & policies.
+globs: 
+alwaysApply: false
+---
+Rule: Set search_path explicitly in all PostgreSQL functions
+Context
+When writing PostgreSQL functions (via Supabase or otherwise), it is critical to explicitly set the search_path to an empty string ('') within the function definition. This ensures deterministic behavior and improves security by forcing all object references to be fully qualified.
+Rationale
+If search_path is not explicitly set in a function:
+
+The function inherits the caller’s session search_path, leading to inconsistent behavior across environments or users.
+Security vulnerabilities may arise if unqualified names resolve to malicious or unintended objects in a different schema.
+
+Pinning search_path to '' enforces explicit qualification (e.g., public.users), reducing ambiguity and preventing privilege escalation attacks via schema hijacking.
+Code Example ✅ (Correct)
+create or replace function public.safe_example()
+  returns void
+  language sql
+  set search_path = ''
+as $$
+  -- Fully qualified object references required here
+  insert into public.logs (message) values ('hello');
+$$;
+
+Code Example ❌ (Incorrect)
+create or replace function unsafe_example()
+  returns void
+  language sql
+as $$
+  -- Unqualified references may resolve incorrectly
+  insert into logs (message) values ('hello');
+$$;
+
+Lint Rule
+Reject any function definition that does not include a set search_path = '' clause.
+Enforcement Notes
+
+Ensure schema-qualified references inside the function once search_path = '' is set.
+Applies to all function languages (sql, plpgsql, etc.).
+Prefer placing the set clause immediately after the language declaration.
+
+Exceptions
+None. All user-defined functions must define search_path = '' explicitly.
+Related
+
+@Supabase Advisor Lint Rule 0011
+@PostgreSQL: search_path Documentation
+
+Rule: Avoid Per-Row Execution of auth.* or current_setting() in RLS Policies
+Context
+PostgreSQL Row-Level Security (RLS) policies can include expressions that use session-level information (e.g., auth.uid(), current_setting()). When used incorrectly, these helper functions execute once per row, which causes serious performance degradation in large datasets.
+Rationale
+Functions like auth.uid(), auth.role(), or current_setting('jwt.claims', true) are efficient when evaluated once per query, but are expensive when evaluated per row. If directly embedded in the USING or WITH CHECK clause of an RLS policy, they are evaluated repeatedly for every row touched by the query.
+For example:
+using (auth.uid() = creator_id)
+
+This results in auth.uid() executing 150,000 times on a 150k-row table — introducing latency in seconds instead of microseconds.
+Code Example ❌ (Inefficient)
+create policy "inefficient_document_access" on documents
+to authenticated
+using (auth.uid() = creator_id);
+
+Code Example ✅ (Efficient)
+create policy "efficient_document_access" on documents
+to authenticated
+using ((select auth.uid()) = creator_id);
+
+Lint Rule
+Reject any RLS policy clause (USING or WITH CHECK) that contains:
+
+auth.uid()
+`auth
+
+.role()`
+
+auth.email()
+auth.jwt()
+current_setting(...)…unless the call is wrapped in a scalar subquery (e.g., (select auth.uid())).
+
+Enforcement Notes
+
+Encourage query-time caching by wrapping function calls in select statements.
+Applies to USING and WITH CHECK clauses in create policy or alter policy statements.
+Use this for any custom session-setting access functions too.
+
+Exceptions
+None. All policy conditions using these helpers must be cached via subqueries.
+Related
+
+@Supabase Advisor Lint Rule 0003
+@PostgreSQL RLS Documentation
+
+Rule: Enforce Size Limits on Character Fields to Prevent Abuse
+Context
+When defining tables in PostgreSQL or Supabase, character-based fields (e.g., varchar, char, text) must have explicit size limits where applicable to prevent excessive storage usage or potential abuse, such as denial-of-service attacks through oversized input.
+Rationale
+Unbounded fields like text or varchar without a length constraint can accept arbitrarily large data, which may:
+
+Lead to performance degradation due to excessive storage or processing requirements.
+Enable abuse vectors, such as users submitting extremely large strings to exhaust server resources.
+Cause unexpected behavior in applications expecting constrained input lengths.
+
+By enforcing size limits (e.g., varchar(255)), you ensure predictable storage usage and protect against malicious input.
+Code Example ✅ (Correct)
+create table users (
+  id uuid primary key,
+  username varchar(50) not null,
+  email varchar(255) not null,
+  bio varchar(500)
+);
+
+Code Example ❌ (Incorrect)
+create table users (
+  id uuid primary key,
+  username text not null,
+  email varchar not null,
+  bio text
+);
+
+Lint Rule
+Reject any table definition where:
+
+varchar or char fields lack an explicit length constraint (e.g., varchar(255)).
+text is used for fields that represent user-controlled input, unless explicitly justified (e.g., for large but bounded content like articles).
+
+Enforcement Notes
+
+Prefer varchar(n) over text for user-controlled fields with predictable maximum lengths (e.g., usernames, emails).
+Suggested maximum lengths:
+Usernames: varchar(50)
+Emails: varchar(255)
+Short descriptions or titles: varchar(100)
+Longer user input (e.g., bios, comments): varchar(500) or varchar(1000)
+
+
+Use text only for fields where data size is inherently unbounded and justified (e.g., document content).
+Apply constraints at the database level rather than relying solely on application-level validation.
+
+Exceptions
+
+text may be used for fields where content length is inherently unbounded (e.g., blog post content), but such cases must be documented with a justification.
+Machine-generated fields (e.g., logs) may use text if size limits are enforced elsewhere (e.g., via triggers).
+
+Related
+
+@PostgreSQL: Data Types Documentation
+@Supabase: Database Best Practices
+
