@@ -8,8 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import Image from 'next/image';
 import Link from 'next/link';
+import BookCover from '@/components/BookCover';
 import { 
   getAllBooks,
   getAllPolls,
@@ -56,9 +56,9 @@ export default function AdminPage() {
     title: '',
     author: '',
     description: '',
-    image_url: '',
     buy_url: '',
-    reading_date: ''
+    reading_date: '',
+    cover_image: null as File | null
   });
 
   // Poll form state
@@ -115,9 +115,9 @@ export default function AdminPage() {
       title: '',
       author: '',
       description: '',
-      image_url: '',
       buy_url: '',
-      reading_date: ''
+      reading_date: '',
+      cover_image: null
     });
     setEditingBook(null);
     setShowBookForm(false);
@@ -128,9 +128,9 @@ export default function AdminPage() {
       title: book.title,
       author: book.author,
       description: book.description || '',
-      image_url: book.image_url || '',
       buy_url: book.buy_url || '',
-      reading_date: book.reading_date || ''
+      reading_date: book.reading_date || '',
+      cover_image: null
     });
     setEditingBook(book);
     setShowBookForm(true);
@@ -139,11 +139,16 @@ export default function AdminPage() {
   const handleSubmitBook = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const formData = {
+        ...bookForm,
+        cover_image: bookForm.cover_image
+      };
+
       if (editingBook) {
-        await updateBook(editingBook.id, bookForm);
+        await updateBook(editingBook.id, formData);
         setMessage({ type: 'success', text: 'Book updated successfully' });
       } else {
-        await createBook(bookForm);
+        await createBook(formData);
         setMessage({ type: 'success', text: 'Book created successfully' });
       }
       resetBookForm();
@@ -311,19 +316,14 @@ export default function AdminPage() {
                       {books.map((book) => (
                         <tr key={book.id} className="border-b hover:bg-muted/50">
                           <td className="p-2">
-                            {book.image_url ? (
-                              <Image
-                                src={book.image_url}
-                                alt={`${book.title} cover`}
+                            <div className="w-10 h-12">
+                              <BookCover
+                                coverImagePath={book.cover_image_path}
+                                title={book.title}
                                 width={40}
                                 height={50}
-                                className="rounded"
                               />
-                            ) : (
-                              <div className="w-10 h-12 bg-muted rounded flex items-center justify-center text-xs">
-                                No Image
-                              </div>
-                            )}
+                            </div>
                           </td>
                           <td className="p-2 font-medium">{book.title}</td>
                           <td className="p-2">{book.author}</td>
@@ -407,12 +407,15 @@ export default function AdminPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="image_url">Image URL</Label>
+                        <Label htmlFor="cover_image">Cover Image</Label>
                         <Input
-                          id="image_url"
-                          type="url"
-                          value={bookForm.image_url}
-                          onChange={(e) => setBookForm({...bookForm, image_url: e.target.value})}
+                          id="cover_image"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0] || null;
+                            setBookForm({...bookForm, cover_image: file});
+                          }}
                         />
                       </div>
                       <div>

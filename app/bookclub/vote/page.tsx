@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import Image from 'next/image';
 import Link from 'next/link';
+import BookCover from '@/components/BookCover';
 import { useRouter } from 'next/navigation';
 import { 
   getActivePolls, 
@@ -280,17 +280,14 @@ export default function VotePage() {
                     }}
                   >
                     <div className="flex items-start gap-4">
-                      {book.image_url && (
-                        <div className="flex-shrink-0">
-                          <Image
-                            src={book.image_url}
-                            alt={`${book.title} cover`}
-                            width={80}
-                            height={100}
-                            className="rounded shadow-sm"
-                          />
-                        </div>
-                      )}
+                      <div className="flex-shrink-0">
+                        <BookCover
+                          coverImagePath={book.cover_image_path}
+                          title={book.title}
+                          width={80}
+                          height={100}
+                        />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-lg mb-1">{book.title}</h3>
                         <p className="text-muted-foreground mb-2">{book.author}</p>
