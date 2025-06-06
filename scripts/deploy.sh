@@ -30,7 +30,7 @@ npm run build
 # Write/update .env file (preserves other variables if present)
 echo "Updating .env file..."
 touch .env
-grep -v '^NEXT_PUBLIC_SUPABASE_URL=' .env | grep -v '^NEXT_PUBLIC_SUPABASE_ANON_KEY=' | grep -v '^NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=' > .env.tmp
+grep -v '^NEXT_PUBLIC_SUPABASE_URL=' .env | grep -v '^NEXT_PUBLIC_SUPABASE_ANON_KEY=' | grep -v '^NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=' > .env.tmp || true
 mv .env.tmp .env
 echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL" >> .env
 echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY" >> .env
