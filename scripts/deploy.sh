@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
+set -x
+
+echo
 
 # Set PATH to include Node.js and PM2
 export PATH=$PATH:/usr/local/bin:/home/$DEPLOY_USER/.nvm/versions/node/*/bin
