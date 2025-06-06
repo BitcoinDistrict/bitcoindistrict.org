@@ -45,9 +45,10 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key $DEPLOY_USER@$DROPLET_IP "\
+            export DEPLOY_USER='$DEPLOY_USER' && \
+            export APP_NAME='$APP_NAME' && \
             export NEXT_PUBLIC_SUPABASE_URL='$NEXT_PUBLIC_SUPABASE_URL' && \
             export NEXT_PUBLIC_SUPABASE_ANON_KEY='$NEXT_PUBLIC_SUPABASE_ANON_KEY' && \
             export NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY='$NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY' && \
-            export APP_NAME='$APP_NAME' && \
             bash /home/$DEPLOY_USER/$APP_NAME/scripts/deploy.sh"
           rm private_key
