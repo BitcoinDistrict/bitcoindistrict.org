@@ -56,7 +56,6 @@ export default function AdminPage() {
     title: '',
     author: '',
     description: '',
-    image_url: '',
     buy_url: '',
     reading_date: ''
   });
@@ -115,7 +114,6 @@ export default function AdminPage() {
       title: '',
       author: '',
       description: '',
-      image_url: '',
       buy_url: '',
       reading_date: ''
     });
@@ -128,7 +126,6 @@ export default function AdminPage() {
       title: book.title,
       author: book.author,
       description: book.description || '',
-      image_url: book.image_url || '',
       buy_url: book.buy_url || '',
       reading_date: book.reading_date || ''
     });
@@ -311,9 +308,9 @@ export default function AdminPage() {
                       {books.map((book) => (
                         <tr key={book.id} className="border-b hover:bg-muted/50">
                           <td className="p-2">
-                            {book.image_url ? (
+                            {book.cover_image_path ? (
                               <Image
-                                src={book.image_url}
+                                src={book.cover_image_path}
                                 alt={`${book.title} cover`}
                                 width={40}
                                 height={50}
@@ -406,15 +403,6 @@ export default function AdminPage() {
                       />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="image_url">Image URL</Label>
-                        <Input
-                          id="image_url"
-                          type="url"
-                          value={bookForm.image_url}
-                          onChange={(e) => setBookForm({...bookForm, image_url: e.target.value})}
-                        />
-                      </div>
                       <div>
                         <Label htmlFor="buy_url">Buy URL</Label>
                         <Input

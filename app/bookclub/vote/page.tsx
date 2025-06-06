@@ -280,17 +280,17 @@ export default function VotePage() {
                     }}
                   >
                     <div className="flex items-start gap-4">
-                      {book.image_url && (
+                      {book.cover_image_path ? (
                         <div className="flex-shrink-0">
                           <Image
-                            src={book.image_url}
+                            src={book.cover_image_path}
                             alt={`${book.title} cover`}
                             width={80}
                             height={100}
                             className="rounded shadow-sm"
                           />
                         </div>
-                      )}
+                      ) : null}
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-lg mb-1">{book.title}</h3>
                         <p className="text-muted-foreground mb-2">{book.author}</p>
