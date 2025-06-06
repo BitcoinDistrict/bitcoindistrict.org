@@ -6,7 +6,7 @@
 alter database postgres set row_security = on;
 
 -- Create Books table
-create table if not exists public.books (
+create table if not exists public.bookclub_books (
   id uuid primary key default gen_random_uuid(),
   title varchar(255) not null,
   author varchar(255) not null,
@@ -20,7 +20,7 @@ create table if not exists public.books (
 );
 
 -- Create Polls table  
-create table if not exists public.polls (
+create table if not exists public.bookclub_polls (
   id uuid primary key default gen_random_uuid(),
   title varchar(255) not null,
   expiration_date timestamp with time zone not null,
@@ -31,19 +31,19 @@ create table if not exists public.polls (
 );
 
 -- Create Poll_Options table (junction table)
-create table if not exists public.poll_options (
+create table if not exists public.bookclub_poll_options (
   id uuid primary key default gen_random_uuid(),
-  poll_id uuid not null references public.polls(id) on delete cascade,
-  book_id uuid not null references public.books(id) on delete cascade,
+  poll_id uuid not null references public.bookclub_polls(id) on delete cascade,
+  book_id uuid not null references public.bookclub_books(id) on delete cascade,
   created_at timestamp with time zone default now(),
   unique(poll_id, book_id)
 );
 
 -- Create Votes table
-create table if not exists public.votes (
+create table if not exists public.bookclub_votes (
   id uuid primary key default gen_random_uuid(),
-  poll_id uuid not null references public.polls(id) on delete cascade,
-  book_id uuid not null references public.books(id) on delete cascade,
+  poll_id uuid not null references public.bookclub_polls(id) on delete cascade,
+  book_id uuid not null references public.bookclub_books(id) on delete cascade,
   user_id uuid not null references auth.users(id) on delete cascade,
   created_at timestamp with time zone default now(),
   unique(poll_id, user_id)
@@ -59,15 +59,15 @@ create table if not exists public.user_roles (
 );
 
 -- Create indexes for performance
-create index if not exists idx_books_title on public.books(title);
-create index if not exists idx_books_reading_date on public.books(reading_date);
-create index if not exists idx_books_is_deleted on public.books(is_deleted);
-create index if not exists idx_polls_expiration_date on public.polls(expiration_date);
-create index if not exists idx_polls_is_active on public.polls(is_active);
-create index if not exists idx_poll_options_poll_id on public.poll_options(poll_id);
-create index if not exists idx_poll_options_book_id on public.poll_options(book_id);
-create index if not exists idx_votes_poll_id on public.votes(poll_id);
-create index if not exists idx_votes_user_id on public.votes(user_id);
+create index if not exists idx_bookclub_books_title on public.bookclub_books(title);
+create index if not exists idx_bookclub_books_reading_date on public.bookclub_books(reading_date);
+create index if not exists idx_bookclub_books_is_deleted on public.bookclub_books(is_deleted);
+create index if not exists idx_bookclub_polls_expiration_date on public.bookclub_polls(expiration_date);
+create index if not exists idx_bookclub_polls_is_active on public.bookclub_polls(is_active);
+create index if not exists idx_bookclub_poll_options_poll_id on public.bookclub_poll_options(poll_id);
+create index if not exists idx_bookclub_poll_options_book_id on public.bookclub_poll_options(book_id);
+create index if not exists idx_bookclub_votes_poll_id on public.bookclub_votes(poll_id);
+create index if not exists idx_bookclub_votes_user_id on public.bookclub_votes(user_id);
 create index if not exists idx_user_roles_user_id on public.user_roles(user_id);
 create index if not exists idx_user_roles_role on public.user_roles(role);
 
@@ -85,7 +85,7 @@ $$;
 
 -- Create trigger for books table
 create trigger trigger_update_books_updated_at
-  before update on public.books
+  before update on public.bookclub_books
   for each row
   execute function public.update_updated_at_column();
 
@@ -119,7 +119,7 @@ create or replace function public.get_active_polls()
   set search_path = ''
 as $$
   select p.id, p.title, p.expiration_date, p.include_read_books, p.created_at, p.created_by
-  from public.polls p
+  from public.bookclub_polls p
   where p.is_active = true 
   and p.expiration_date > now()
   order by p.expiration_date asc;
@@ -142,9 +142,9 @@ as $$
     b.title,
     b.author,
     count(v.id) as vote_count
-  from public.poll_options po
-  inner join public.books b on po.book_id = b.id
-  left join public.votes v on v.poll_id = po.poll_id and v.book_id = b.id
+  from public.bookclub_poll_options po
+  inner join public.bookclub_books b on po.book_id = b.id
+  left join public.bookclub_votes v on v.poll_id = po.poll_id and v.book_id = b.id
   where po.poll_id = poll_id_param
   group by b.id, b.title, b.author
   order by vote_count desc, b.title;
@@ -168,9 +168,9 @@ as $$
     b.author,
     b.image_url,
     count(v.id) as vote_count
-  from public.poll_options po
-  inner join public.books b on po.book_id = b.id
-  left join public.votes v on v.poll_id = po.poll_id and v.book_id = b.id
+  from public.bookclub_poll_options po
+  inner join public.bookclub_books b on po.book_id = b.id
+  left join public.bookclub_votes v on v.poll_id = po.poll_id and v.book_id = b.id
   where po.poll_id = poll_id_param
   group by b.id, b.title, b.author, b.image_url
   order by vote_count desc, b.title;
@@ -202,7 +202,7 @@ begin
     true,
     expiration_date < now()
   into poll_exists, poll_expired
-  from public.polls 
+  from public.bookclub_polls 
   where id = poll_id_param and is_active = true;
   
   if not poll_exists then
@@ -216,7 +216,7 @@ begin
   -- Check if book is in poll
   select exists(
     select 1 
-    from public.poll_options 
+    from public.bookclub_poll_options 
     where poll_id = poll_id_param and book_id = book_id_param
   ) into book_in_poll;
   
@@ -226,7 +226,7 @@ begin
 
   -- Check for existing vote
   select id into existing_vote_id
-  from public.votes 
+  from public.bookclub_votes 
   where poll_id = poll_id_param and user_id = current_user_id;
   
   if existing_vote_id is not null then
@@ -234,7 +234,7 @@ begin
   end if;
 
   -- Cast the vote
-  insert into public.votes (poll_id, book_id, user_id)
+  insert into public.bookclub_votes (poll_id, book_id, user_id)
   values (poll_id_param, book_id_param, current_user_id);
 
   return json_build_object('success', true, 'message', 'Vote cast successfully');
@@ -242,44 +242,44 @@ end;
 $$;
 
 -- Enable RLS on all tables
-alter table public.books enable row level security;
-alter table public.polls enable row level security;
-alter table public.poll_options enable row level security;
-alter table public.votes enable row level security;
+alter table public.bookclub_books enable row level security;
+alter table public.bookclub_polls enable row level security;
+alter table public.bookclub_poll_options enable row level security;
+alter table public.bookclub_votes enable row level security;
 alter table public.user_roles enable row level security;
 
 -- RLS Policies for Books table
-create policy "Books are viewable by everyone" on public.books
+create policy "Books are viewable by everyone" on public.bookclub_books
   for select using (is_deleted = false);
 
-create policy "Books can be managed by book club admins" on public.books
+create policy "Books can be managed by book club admins" on public.bookclub_books
   for all using ((select public.is_book_club_admin()));
 
 -- RLS Policies for Polls table  
-create policy "Active polls are viewable by everyone" on public.polls
+create policy "Active polls are viewable by everyone" on public.bookclub_polls
   for select using (is_active = true);
 
-create policy "Polls can be managed by book club admins" on public.polls
+create policy "Polls can be managed by book club admins" on public.bookclub_polls
   for all using ((select public.is_book_club_admin()));
 
 -- RLS Policies for Poll_Options table
-create policy "Poll options are viewable by everyone" on public.poll_options
+create policy "Poll options are viewable by everyone" on public.bookclub_poll_options
   for select using (true);
 
-create policy "Poll options can be managed by book club admins" on public.poll_options
+create policy "Poll options can be managed by book club admins" on public.bookclub_poll_options
   for all using ((select public.is_book_club_admin()));
 
 -- RLS Policies for Votes table
-create policy "Users can view their own votes" on public.votes
+create policy "Users can view their own votes" on public.bookclub_votes
   for select using ((select auth.uid()) = user_id);
 
-create policy "Users can insert their own votes" on public.votes
+create policy "Users can insert their own votes" on public.bookclub_votes
   for insert with check ((select auth.uid()) = user_id);
 
-create policy "Admins can view all votes" on public.votes
+create policy "Admins can view all votes" on public.bookclub_votes
   for select using ((select public.is_book_club_admin()));
 
-create policy "Admins can manage all votes" on public.votes
+create policy "Admins can manage all votes" on public.bookclub_votes
   for all using ((select public.is_book_club_admin()));
 
 -- RLS Policies for User_Roles table

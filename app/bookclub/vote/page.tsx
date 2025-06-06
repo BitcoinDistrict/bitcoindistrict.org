@@ -280,6 +280,7 @@ export default function VotePage() {
                     }}
                   >
                     <div className="flex items-start gap-4">
+<<<<<<< HEAD
                       <div className="flex-shrink-0">
                         <BookCover
                           coverImagePath={book.cover_image_path}
@@ -288,6 +289,19 @@ export default function VotePage() {
                           height={100}
                         />
                       </div>
+=======
+                      {book.cover_image_path ? (
+                        <div className="flex-shrink-0">
+                          <Image
+                            src={book.cover_image_path}
+                            alt={`${book.title} cover`}
+                            width={80}
+                            height={100}
+                            className="rounded shadow-sm"
+                          />
+                        </div>
+                      ) : null}
+>>>>>>> staging
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-lg mb-1">{book.title}</h3>
                         <p className="text-muted-foreground mb-2">{book.author}</p>

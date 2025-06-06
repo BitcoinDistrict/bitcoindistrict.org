@@ -19,6 +19,7 @@ import {
   PollResult
 } from '@/lib/bookClub';
 import { ExternalLink, Calendar, Vote, User } from 'lucide-react';
+import PieChart, { PieChartData } from '@/components/PieChart';
 
 export default function BookClubPage() {
   const [allBooks, setAllBooks] = useState<Book[]>([]);
@@ -201,73 +202,45 @@ export default function BookClubPage() {
     );
   };
 
-  const PollDisplay = ({ poll }: { poll: Poll }) => {
-    const results = pollResults[poll.id] || [];
-    const totalVotes = results.reduce((sum, result) => sum + result.vote_count, 0);
-    const timeLeft = new Date(poll.expiration_date).getTime() - Date.now();
-    const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+  // Dashboard metrics
+  const totalVotes = activePolls.length > 0 && pollResults[activePolls[0].id]
+    ? pollResults[activePolls[0].id].reduce((sum, result) => sum + result.vote_count, 0)
+    : 0;
 
-    return (
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Vote className="w-5 h-5" />
-            {poll.title}
-          </CardTitle>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>Expires: {new Date(poll.expiration_date).toLocaleDateString()}</span>
-            <span>({daysLeft > 0 ? `${daysLeft} days left` : 'Expired'})</span>
-            <span>Total votes: {totalVotes}</span>
+  // Pie chart data for the current poll
+  const poll = activePolls[0];
+  const pollData: PieChartData[] = poll && pollResults[poll.id]
+    ? pollResults[poll.id].map((result, idx) => ({
+        title: result.book_title,
+        value: result.vote_count,
+        color: [
+          '#FFD600', '#FF6D00', '#00B8D4', '#00C853', '#D500F9', '#FF1744', '#AEEA00', '#304FFE', '#FFAB00', '#00E5FF',
+        ][idx % 10],
+      }))
+    : [];
+
+  // Book grid for poll choices
+  const PollBookGrid = () => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {pollResults[poll.id]?.map((result) => (
+        <Card key={result.book_id} className="flex flex-col items-center p-4">
+          <BookCover
+            coverImagePath={result.book_image_url}
+            title={result.book_title}
+            width={60}
+            height={80}
+          />
+          <div className="mt-2 text-center">
+            <div className="font-semibold">{result.book_title}</div>
+            <div className="text-sm text-muted-foreground">{result.book_author}</div>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4">
-            {results.map((result) => (
-              <div key={result.book_id} className="flex items-center justify-between p-3 border rounded">
-                <div className="flex items-center gap-3">
-                  <BookCover
-                    coverImagePath={result.book_image_url}
-                    title={result.book_title}
-                    width={40}
-                    height={50}
-                  />
-                  <div>
-                    <h4 className="font-medium">{result.book_title}</h4>
-                    <p className="text-sm text-muted-foreground">{result.book_author}</p>
-                  </div>
-                </div>
-                <Badge variant="secondary">
-                  {result.vote_count} vote{result.vote_count !== 1 ? 's' : ''}
-                </Badge>
-              </div>
-            ))}
-          </div>
-          {user && daysLeft > 0 && (
-            <div className="mt-4">
-              <Button asChild>
-                <Link href="/bookclub/vote">
-                  Vote Now
-                </Link>
-              </Button>
-            </div>
-          )}
-          {!user && daysLeft > 0 && (
-            <div className="mt-4">
-              <p className="text-sm text-muted-foreground mb-2">
-                Sign in to participate in the poll
-              </p>
-              <Button variant="outline" asChild>
-                <Link href="/sign-in">
-                  <User className="w-4 h-4 mr-2" />
-                  Sign In
-                </Link>
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    );
-  };
+          <Badge variant="secondary" className="mt-2">
+            {result.vote_count} vote{result.vote_count !== 1 ? 's' : ''}
+          </Badge>
+        </Card>
+      ))}
+    </div>
+  );
 
   if (loading) {
     return (
@@ -284,20 +257,46 @@ export default function BookClubPage() {
 
   return (
     <div className="container mx-auto py-8 px-4">
+      {/* Dashboard metrics row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <Card className="text-center p-4"><div className="text-2xl font-bold">{booksRead.length}</div><div className="text-sm text-muted-foreground">Books Read</div></Card>
+        <Card className="text-center p-4"><div className="text-2xl font-bold">{booksToRead.length}</div><div className="text-sm text-muted-foreground">To Read</div></Card>
+        <Card className="text-center p-4"><div className="text-2xl font-bold">{allBooks.length}</div><div className="text-sm text-muted-foreground">Total Books</div></Card>
+        <Card className="text-center p-4"><div className="text-2xl font-bold">{totalVotes}</div><div className="text-sm text-muted-foreground">Votes in Current Poll</div></Card>
+      </div>
+
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Bitcoin District Book Club</h1>
-        <p className="text-lg text-muted-foreground">
-          Expanding minds through Bitcoin and Austrian economics literature
+        <h1 className="text-4xl font-bold mb-2">Bitcoin District Book Club</h1>
+        <p className="text-lg text-muted-foreground mb-4">
+          Join other DC Bitcoiners on the never-ending journey down the Bitcoin rabbit hole. Our book club meets every month!
         </p>
       </div>
 
-      {/* Active Polls Section */}
-      {activePolls.length > 0 && (
+      {/* Condensed Poll Section */}
+      {poll && pollResults[poll.id] && (
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Active Polls</h2>
-          {activePolls.map((poll) => (
-            <PollDisplay key={poll.id} poll={poll} />
-          ))}
+          <h2 className="text-2xl font-semibold mb-4">Vote for the Next Book</h2>
+          <div className="flex flex-col md:flex-row gap-8 items-start">
+            <PieChart data={pollData} label="Current Votes" className="w-full md:w-1/3" />
+            <div className="flex-1">
+              <PollBookGrid />
+              {user && new Date(poll.expiration_date) > new Date() && (
+                <div className="mt-4 flex justify-center">
+                  <Button asChild>
+                    <Link href="/bookclub/vote">Vote Now</Link>
+                  </Button>
+                </div>
+              )}
+              {!user && new Date(poll.expiration_date) > new Date() && (
+                <div className="mt-4 flex flex-col items-center">
+                  <p className="text-sm text-muted-foreground mb-2">Sign in to participate in the poll</p>
+                  <Button variant="outline" asChild>
+                    <Link href="/sign-in"><User className="w-4 h-4 mr-2" />Sign In</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 

@@ -316,10 +316,17 @@ export default function AdminPage() {
                       {books.map((book) => (
                         <tr key={book.id} className="border-b hover:bg-muted/50">
                           <td className="p-2">
+<<<<<<< HEAD
                             <div className="w-10 h-12">
                               <BookCover
                                 coverImagePath={book.cover_image_path}
                                 title={book.title}
+=======
+                            {book.cover_image_path ? (
+                              <Image
+                                src={book.cover_image_path}
+                                alt={`${book.title} cover`}
+>>>>>>> staging
                                 width={40}
                                 height={50}
                               />
@@ -407,6 +414,7 @@ export default function AdminPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
+<<<<<<< HEAD
                         <Label htmlFor="cover_image">Cover Image</Label>
                         <Input
                           id="cover_image"
@@ -419,6 +427,8 @@ export default function AdminPage() {
                         />
                       </div>
                       <div>
+=======
+>>>>>>> staging
                         <Label htmlFor="buy_url">Buy URL</Label>
                         <Input
                           id="buy_url"

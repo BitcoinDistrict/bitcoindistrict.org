@@ -30,16 +30,16 @@ create policy "Admins can delete book covers" on storage.objects
   );
 
 -- Update books table structure
-alter table public.books 
+alter table public.bookclub_books 
   drop column if exists image_url,
   add column if not exists cover_image_path varchar(255),
   add column if not exists cover_image_uploaded_at timestamp with time zone;
 
 -- Add index for cover image path
-create index if not exists idx_books_cover_image_path on public.books(cover_image_path);
+create index if not exists idx_bookclub_books_cover_image_path on public.bookclub_books(cover_image_path);
 
 -- Add comment to explain the new field
-comment on column public.books.cover_image_path is 'Path to book cover image in Supabase Storage bucket book-covers';
+comment on column public.bookclub_books.cover_image_path is 'Path to book cover image in Supabase Storage bucket book-covers';
 
 -- Function to get book cover URL from storage path
 create or replace function public.get_book_cover_url(cover_path text)
@@ -78,8 +78,8 @@ end;
 $$;
 
 -- Create trigger for cleanup
-drop trigger if exists trigger_cleanup_book_cover on public.books;
+drop trigger if exists trigger_cleanup_book_cover on public.bookclub_books;
 create trigger trigger_cleanup_book_cover
-  before update on public.books
+  before update on public.bookclub_books
   for each row
   execute function public.cleanup_old_book_cover(); 
