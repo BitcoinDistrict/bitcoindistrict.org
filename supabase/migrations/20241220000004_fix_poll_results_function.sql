@@ -20,9 +20,9 @@ as $$
     b.author,
     public.get_book_cover_url(b.cover_image_path),
     count(v.id) as vote_count
-  from public.poll_options po
-  inner join public.books b on po.book_id = b.id
-  left join public.votes v on v.poll_id = po.poll_id and v.book_id = b.id
+  from public.bookclub_poll_options po
+  inner join public.bookclub_books b on po.book_id = b.id
+  left join public.bookclub_votes v on v.poll_id = po.poll_id and v.book_id = b.id
   where po.poll_id = poll_id_param
   group by b.id, b.title, b.author, b.cover_image_path
   order by vote_count desc, b.title;

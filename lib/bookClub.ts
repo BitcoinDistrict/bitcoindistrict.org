@@ -70,7 +70,7 @@ export interface PollResult {
 // Book functions
 export async function getAllBooks() {
   const { data, error } = await supabase
-    .from('books')
+    .from('bookclub_books')
     .select('*')
     .eq('is_deleted', false)
     .order('title')
@@ -81,7 +81,7 @@ export async function getAllBooks() {
 
 export async function getBooksRead() {
   const { data, error } = await supabase
-    .from('books')
+    .from('bookclub_books')
     .select('*')
     .eq('is_deleted', false)
     .not('reading_date', 'is', null)
@@ -93,7 +93,7 @@ export async function getBooksRead() {
 
 export async function getBooksToRead() {
   const { data, error } = await supabase
-    .from('books')
+    .from('bookclub_books')
     .select('*')
     .eq('is_deleted', false)
     .is('reading_date', null)
@@ -105,7 +105,7 @@ export async function getBooksToRead() {
 
 export async function createBook(book: Omit<Book, 'id' | 'created_at' | 'updated_at' | 'is_deleted'>) {
   const { data, error } = await supabase
-    .from('books')
+    .from('bookclub_books')
     .insert([book])
     .select()
     .single()
@@ -116,7 +116,7 @@ export async function createBook(book: Omit<Book, 'id' | 'created_at' | 'updated
 
 export async function updateBook(id: string, updates: Partial<Book>) {
   const { data, error } = await supabase
-    .from('books')
+    .from('bookclub_books')
     .update(updates)
     .eq('id', id)
     .select()
@@ -128,7 +128,7 @@ export async function updateBook(id: string, updates: Partial<Book>) {
 
 export async function deleteBook(id: string) {
   const { data, error } = await supabase
-    .from('books')
+    .from('bookclub_books')
     .update({ is_deleted: true })
     .eq('id', id)
     .select()
@@ -183,7 +183,7 @@ export async function getActivePolls() {
 
 export async function getAllPolls() {
   const { data, error } = await supabase
-    .from('polls')
+    .from('bookclub_polls')
     .select('*')
     .order('created_at', { ascending: false })
 
@@ -193,7 +193,7 @@ export async function getAllPolls() {
 
 export async function createPoll(poll: Omit<Poll, 'id' | 'created_at' | 'created_by' | 'is_active'>) {
   const { data, error } = await supabase
-    .from('polls')
+    .from('bookclub_polls')
     .insert([poll])
     .select()
     .single()
@@ -209,7 +209,7 @@ export async function addPollOptions(pollId: string, bookIds: string[]) {
   }))
 
   const { data, error } = await supabase
-    .from('poll_options')
+    .from('bookclub_poll_options')
     .insert(options)
     .select()
 
@@ -219,7 +219,7 @@ export async function addPollOptions(pollId: string, bookIds: string[]) {
 
 export async function getPollOptions(pollId: string) {
   const { data, error } = await supabase
-    .from('poll_options')
+    .from('bookclub_poll_options')
     .select(`
       *,
       books (*)
@@ -261,7 +261,7 @@ export async function castVote(pollId: string, bookId: string) {
 
 export async function getUserVote(pollId: string) {
   const { data, error } = await supabase
-    .from('votes')
+    .from('bookclub_votes')
     .select('*')
     .eq('poll_id', pollId)
     .single()

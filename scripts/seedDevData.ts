@@ -45,12 +45,12 @@ async function main() {
 
   // 2. Fetch books and current poll
   const { data: books, error: booksError } = await supabase
-    .from('books')
+    .from('bookclub_books')
     .select('id, title');
   if (booksError) throw booksError;
 
   const { data: polls, error: pollsError } = await supabase
-    .from('polls')
+    .from('bookclub_polls')
     .select('id, expiration_date')
     .order('expiration_date', { ascending: false })
     .limit(1);
@@ -60,7 +60,7 @@ async function main() {
 
   // 3. Fetch poll options
   const { data: pollOptions, error: pollOptionsError } = await supabase
-    .from('poll_options')
+    .from('bookclub_poll_options')
     .select('id, book_id')
     .eq('poll_id', poll.id);
   if (pollOptionsError) throw pollOptionsError;
@@ -74,7 +74,7 @@ async function main() {
     for (const option of votesFor) {
       // Insert vote
       const { error: voteError } = await supabase
-        .from('votes')
+        .from('bookclub_votes')
         .insert({ user_id: user.id, poll_option_id: option.id });
       if (voteError) {
         if (voteError.code === '23505') continue; // skip duplicate votes
