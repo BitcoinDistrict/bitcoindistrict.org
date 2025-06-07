@@ -82,7 +82,7 @@ services:
         condition: service_healthy
 
   meta:
-    image: supabase/postgres-meta:v0.73.1
+    image: supabase/postgres-meta:v0.72.0
     restart: unless-stopped
     ports:
       - "8080:8080"
