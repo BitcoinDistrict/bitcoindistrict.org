@@ -10,9 +10,9 @@ echo "PWD at start: $(pwd)"
 # Set PATH to include Node.js and PM2
 export PATH=$PATH:/usr/local/bin:/home/$DEPLOY_USER/.nvm/versions/node/*/bin
 
-echo "Attempting to cd to /home/$DEPLOY_USER/$APP_NAME"
+echo "Attempting to cd to /mnt/data/$APP_NAME"
 # Navigate to project directory
-cd /home/$DEPLOY_USER/$APP_NAME
+cd /mnt/data/$APP_NAME
 echo "In project directory: $(pwd)"
 
 # Pull latest changes
@@ -31,12 +31,22 @@ npm run build
 echo "Updating .env file..."
 touch .env
 set +e
-grep -v '^NEXT_PUBLIC_SUPABASE_URL=' .env | grep -v '^NEXT_PUBLIC_SUPABASE_ANON_KEY=' | grep -v '^NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=' > .env.tmp
+grep -v '^NEXT_PUBLIC_SUPABASE_URL=' .env | \
+grep -v '^NEXT_PUBLIC_SUPABASE_ANON_KEY=' | \
+grep -v '^NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=' | \
+grep -v '^POSTGRES_PASSWORD=' | \
+grep -v '^SUPABASE_SERVICE_KEY=' | \
+grep -v '^PGRST_JWT_SECRET=' | \
+grep -v '^JWT_SECRET=' > .env.tmp
 set -e
 mv .env.tmp .env
 echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL" >> .env
 echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY" >> .env
 echo "NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=$NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY" >> .env
+echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
+echo "SUPABASE_SERVICE_KEY=$SUPABASE_SERVICE_KEY" >> .env
+echo "PGRST_JWT_SECRET=$PGRST_JWT_SECRET" >> .env
+echo "JWT_SECRET=$JWT_SECRET" >> .env
 
 echo "Restarting or starting PM2 process..."
 pm2 restart app || pm2 start npm --name "app" -- run start
