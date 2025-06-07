@@ -10,8 +10,20 @@ echo "PWD at start: $(pwd)"
 # Set PATH to include Node.js and PM2
 export PATH=$PATH:/usr/local/bin:/home/$DEPLOY_USER/.nvm/versions/node/*/bin
 
-echo "Attempting to cd to /mnt/data/$APP_NAME"
+# Ensure project directory exists and is a git repo
+if [ ! -d "/mnt/data/$APP_NAME/.git" ]; then
+  echo "/mnt/data/$APP_NAME does not exist or is not a git repo. Cloning from GIT_REPO_URL..."
+  if [ -z "$GIT_REPO_URL" ]; then
+    echo "Error: GIT_REPO_URL environment variable is not set. Cannot clone repo."
+    exit 1
+  fi
+  git clone "$GIT_REPO_URL" "/mnt/data/$APP_NAME"
+else
+  echo "/mnt/data/$APP_NAME exists and is a git repo."
+fi
+
 # Navigate to project directory
+echo "Attempting to cd to /mnt/data/$APP_NAME"
 cd /mnt/data/$APP_NAME
 echo "In project directory: $(pwd)"
 
